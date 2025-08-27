@@ -1,0 +1,32 @@
+# 同机同步启动配置（不修改任何业务代码）
+session:
+  label: "session_%Y%m%d_%H%M%S"
+  out_dir: "data/raw"
+
+sync:
+  # 从“现在”推迟多少秒，同时启动两个脚本（用 sleep 对齐）
+  start_after_s: 5
+
+# Radar 脚本信息
+radar:
+  # 你的 a111_bpm_iq_ok.py 所在目录（可以是绝对路径）
+  workdir: "/path/to/your/radar/script/dir"
+  # 启动命令（保持你原有的调用方式；只要能在终端直接跑通即可，这里就照抄）
+  cmd: "python a111_bpm_iq_ok.py --host 192.168.1.50"
+  # 把 stdout 捕获到文件（会自动加上 session 时间戳前缀）
+  stdout_filename: "radar_a111_stdout.csv"
+  stderr_filename: "radar_a111_stderr.log"
+
+# GDX 脚本信息
+gdx:
+  # 必须在 godirect-examples-main 下运行 → 这里填那个目录路径
+  workdir: "/path/to/godirect-examples-main"
+  # 你的脚本保持原样（内部已经写死了参数与输出文件名，照常运行）
+  cmd: "python gdx_getting_started_usb_0807.py"
+  stdout_filename: "gdx_stdout.log"      # 可选：收集打印信息
+  stderr_filename: "gdx_stderr.log"
+
+# 运行控制
+run:
+  # 可选：总时长（秒）。若 >0，超时后给两个子进程发 SIGINT，优雅退出
+  max_duration_s: 0
